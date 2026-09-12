@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaling Coding Bots from 1 Repo to 100s - A Safe Plan</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f6f7f9; color: #1f2933; line-height: 1.6; padding: 24px; }
+  .page { max-width: 860px; margin: 0 auto; }
+  header { background: #102a43; color: #fff; border-radius: 14px; padding: 32px 28px; margin-bottom: 24px; }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { color: #bcccdc; font-size: 15px; }
+  .card { background: #fff; border: 1px solid #e4e7eb; border-radius: 14px; padding: 24px 26px; margin-bottom: 18px; }
+  .card h2 { font-size: 19px; color: #102a43; margin-bottom: 10px; }
+  .card h2 .num { display: inline-block; background: #2680c2; color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; margin-right: 10px; }
+  .card p { margin-bottom: 10px; font-size: 15px; }
+  ul { margin: 8px 0 12px 22px; }
+  li { margin-bottom: 7px; font-size: 15px; }
+  .rule { background: #fff8e6; border: 1px solid #f0d080; border-radius: 12px; padding: 18px 22px; margin-bottom: 18px; }
+  .rule strong { color: #8a5a00; }
+  .tag { display: inline-block; background: #e6f2fb; color: #186faf; border-radius: 20px; padding: 2px 12px; font-size: 12.5px; margin: 3px 4px 3px 0; }
+  .wave { border-left: 4px solid #2680c2; padding: 6px 0 6px 16px; margin: 12px 0; }
+  .wave h3 { font-size: 16px; color: #102a43; margin-bottom: 4px; }
+  .wave p { font-size: 14.5px; color: #52606d; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e4e7eb; }
+  th { background: #f0f4f8; color: #334e68; }
+  .footer { text-align: center; color: #7b8794; font-size: 13px; margin: 20px 0 10px; }
+  .warn { color: #b42318; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>Scaling Coding Bots from 1 Repo to 100s - Without Breaking Everything</h1>
+  <p>A plain-language rollout plan. The goal: bots earn trust step by step, and one bad bot can never hurt more than a small corner of your code.</p>
+</header>
+
+<div class="rule">
+  <strong>The one rule that protects you:</strong> a bot gets more freedom only after it has proven itself on smaller, safer work. No bot ever skips the ladder. New repo = back to the bottom of the ladder, even for a proven bot.
+</div>
+
+<div class="card">
+  <h2><span class="num">1</span>Put safety rails in place before you scale</h2>
+  <p>These rails are what let you sleep at night when 100 repos are involved. Build them once, centrally, so every repo gets them for free.</p>
+  <ul>
+    <li><b>Small changes only.</b> Cap how much a bot can change in one PR (files, lines, folders it may touch). Big changes need a human first.</li>
+    <li><b>No self-approval.</b> A bot can never approve its own PR, its own exception, or its own release. Humans, or an independent gate, do that.</li>
+    <li><b>Tests must pass.</b> A PR merges only if the repo's own tests and checks pass. No test suite = the repo stays in watch-only mode.</li>
+    <li><b>One-click undo.</b> Every bot change can be reverted fast, and rollback is tested, not just hoped for.</li>
+    <li><b>Auto-pause button.</b> If one bot misbehaves, you can freeze that bot (or one repo, or the whole fleet) in seconds.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2><span class="num">2</span>Sort your repos into risk buckets</h2>
+  <p>Not all repos deserve the same trust. Sort them once, and the sorting decides what bots may do there.</p>
+  <table>
+    <tr><th>Bucket</th><th>Examples</th><th>What bots may do</th></tr>
+    <tr><td>Low risk</td><td>Docs, internal tools, side projects</td><td>Full ladder, moves fast</td></tr>
+    <tr><td>Medium risk</td><td>Normal product code with good tests</td><td>Slower ladder, human review always</td></tr>
+    <tr><td>High risk</td><td>Payments, auth, data, infra</td><td>Suggest only. Bots draft, humans decide</td></tr>
+  </table>
+  <p>Start bots in the low-risk bucket. High-risk repos may never get autonomy - and that is fine.</p>
+</div>
+
+<div class="card">
+  <h2><span class="num">3</span>Every bot climbs the same trust ladder</h2>
+  <div class="wave"><h3>Rung 1 - Shadow</h3><p>The bot does the work silently, changes nothing. You compare its output to what humans did. This tells you if it is any good, at zero risk.</p></div>
+  <div class="wave"><h3>Rung 2 - Suggest</h3><p>The bot opens draft PRs and comments. Humans merge or close them. You track how often humans accept its work.</p></div>
+  <div class="wave"><h3>Rung 3 - Assisted</h3><p>The bot opens real PRs. A human still reviews every one, but the easy ones take minutes.</p></div>
+  <div class="wave"><h3>Rung 4 - Narrow autonomy</h3><p>For a short list of safe task types (like dependency bumps or lint fixes) in low-risk repos, the bot may merge on its own after checks pass. Everything else still needs a human.</p></div>
+  <p>A bot moves up a rung only after enough good outcomes at its current rung - and a bad streak moves it back down automatically.</p>
+</div>
+
+<div class="card">
+  <h2><span class="num">4</span>Roll out in waves, not all at once</h2>
+  <div class="wave"><h3>Wave 1: 1-2 repos</h3><p>Prove the whole setup end to end: tracking, scorecards, gates, undo. Run for a few weeks.</p></div>
+  <div class="wave"><h3>Wave 2: about 10 repos</h3><p>Add the next-lowest-risk repos. Watch whether the dashboard and auto-pause still work at this size.</p></div>
+  <div class="wave"><h3>Wave 3: 25-50 repos</h3><p>Same pattern. Fix whatever breaks in your process before going wider.</p></div>
+  <div class="wave"><h3>Wave 4: 100+ repos</h3><p>Only now go broad. By this point the process is boring - which is exactly what you want.</p></div>
+  <p>Each wave has a simple gate: no open, unexplained quality problems from the previous wave.</p>
+</div>
+
+<div class="card">
+  <h2><span class="num">5</span>Limit the blast radius</h2>
+  <p>Assume a bot will eventually do something wrong. Design so "wrong" stays small.</p>
+  <ul>
+    <li><b>Per-repo caps:</b> max open bot PRs per repo, so no repo is flooded.</li>
+    <li><b>Fleet caps:</b> max new bot PRs per day across the fleet, so humans are never buried in review.</li>
+    <li><b>One bad bot, one corner:</b> a bot losing trust in one repo is paused everywhere automatically until a human looks.</li>
+    <li><b>Canary repos:</b> a few repos get every new bot version first. New versions never reach all repos on day one.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2><span class="num">6</span>Watch one fleet dashboard, not 100 repos</h2>
+  <p>You should never need to check repos one by one. One screen tells you where to look.</p>
+  <ul>
+    <li><b>Fleet health:</b> are bot changes leading to fewer bugs and faster delivery, or more rework and incidents?</li>
+    <li><b>Heat map:</b> every repo x every bot, colored green / yellow / red. Red squares are your to-do list.</li>
+    <li><b>Human load:</b> how many review minutes bots are asking for. If this climbs, the bots are costing you, not helping.</li>
+    <li><b>Pause log:</b> every auto-pause, why it fired, and what a human decided.</li>
+  </ul>
+  <p><span class="tag">PR count</span><span class="tag">lines of code</span><span class="tag">bot activity</span> - these are vanity numbers. Never judge the fleet by them.</p>
+</div>
+
+<div class="card">
+  <h2><span class="num">7</span>Keep a control group forever</h2>
+  <p>Always leave 5-15% of similar low-risk tasks to humans (or older bot versions). Without this comparison group, you can never honestly answer "are the bots actually helping, or would this have gone fine anyway?" This is what keeps the dashboard truthful.</p>
+</div>
+
+<div class="card">
+  <h2><span class="num">8</span>Your weekly 15-minute check</h2>
+  <ul>
+    <li>Any red squares on the heat map? Why?</li>
+    <li>Any auto-pauses this week? Were they real problems or false alarms?</li>
+    <li>Is human review time going up or down?</li>
+    <li>Any bot close to moving up a rung? Does a human agree?</li>
+    <li>Any escaped bug traced back to a bot change? Feed it back into the bot's score.</li>
+  </ul>
+  <p>If all five are calm, the fleet is healthy. If not, you know exactly where to dig.</p>
+</div>
+
+<div class="footer">
+  Simple version: rails first, repos in risk buckets, bots climb a ladder, rollout in waves, small blast radius, one dashboard, always a control group.
+</div>
+
+</div>
+</body>
+</html>
